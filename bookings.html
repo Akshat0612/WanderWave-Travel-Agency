@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Bookings — WanderWave</title>
+    <meta name="description" content="View and manage your saved WanderWave booking requests.">
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* small local additions to complement styles.css */
+        .bookings-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            margin-bottom: 1rem
+        }
+
+        .bookings-table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        .bookings-table th,
+        .bookings-table td {
+            padding: 0.6rem;
+            border: 1px solid #eee
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: .95rem
+        }
+
+        .small-btn {
+            padding: 0.3rem .5rem;
+            border-radius: 6px;
+            background: #eee;
+            border: none;
+            cursor: pointer
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="index.html"><img src="images/logo.png" alt="Brand Logo" class="logo">WanderWave</a>
+            <nav class="main-nav">
+                <a href="index.html">Home</a>
+                <a href="packages.html">Packages</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="booking.html">Book</a>
+                <a class="active" href="bookings.html">My Bookings</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>My Bookings</h1>
+        <p class="muted">Bookings are stored in your browser. To persist bookings across devices you need a server.</p>
+
+        <div class="bookings-controls">
+            <button id="exportBtn" class="btn-small">Export CSV</button>
+            <button id="clearAllBtn" class="btn-small" title="Remove all bookings">Clear all</button>
+            <span id="count" style="margin-left:auto" class="muted"></span>
+        </div>
+
+        <div id="noBookings" class="muted" style="display:none">You have no saved bookings yet. Make a booking on the <a
+                href="booking.html">Booking page</a>.</div>
+
+        <table id="bookingsTable" class="bookings-table" style="display:none" aria-describedby="bookings-desc">
+            <caption id="bookings-desc">List of bookings saved in this browser</caption>
+            <thead>
+                <tr>
+                    <th>When</th>
+                    <th>Name</th>
+                    <th>Package</th>
+                    <th>Dates</th>
+                    <th>Travellers</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="bookingsBody"></tbody>
+        </table>
+
+        <!-- details panel -->
+        <section id="detailsPanel"
+            style="display:none;margin-top:1rem;padding:1rem;background:#fff;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.04)">
+            <h2 id="detailTitle">Booking details</h2>
+            <div id="detailContent"></div>
+            <p><button id="closeDetail" class="btn-small">Close</button></p>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>&copy; <span id="year6"></span> WanderWave Travel.</p>
+        </div>
+    </footer>
+
+    <script>
+        const STORAGE_KEY = 'wanderwave_bookings';
+
+        function getBookingsFromStorage() {
+            try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+            catch (e) { console.error(e); return []; }
+        }
+
+        function saveBookingsToStorage(bookings) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
+        }
+
+        function renderBookings() {
+            const bookings = getBookingsFromStorage();
+            const body = document.getElementById('bookingsBody');
+            const table = document.getElementById('bookingsTable');
+            const noBookings = document.getElementById('noBookings');
+            const count = document.getElementById('count');
+
+            body.innerHTML = '';
+            if (!bookings.length) {
+                table.style.display = 'none';
+                noBookings.style.display = 'block';
+                count.textContent = '';
+                return;
+            }
+
+            table.style.display = '';
+            noBookings.style.display = 'none';
+            count.textContent = `${bookings.length} booking(s)`;
+
+            bookings.forEach((b, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+          <td>${new Date(b.createdAt).toLocaleString()}</td>
+          <td>${escapeHtml(b.name)}</td>
+          <td>${escapeHtml(b.package)}</td>
+          <td>${escapeHtml(b.start)} → ${escapeHtml(b.end)}</td>
+          <td>${escapeHtml(b.travellers)}</td>
+          <td>
+            <button class="small-btn" data-idx="${idx}" data-action="view">View</button>
+            <button class="small-btn" data-idx="${idx}" data-action="delete">Delete</button>
+          </td>
+        `;
+                body.appendChild(tr);
+            });
+        }
+
+        function escapeHtml(str) {
+            return String(str || '').replace(/[&<>\"']/g, function (m) {
+                return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": "&#39;" })[m];
+            });
+        }
+
+        // Event delegation for view/delete
+        document.getElementById('bookingsBody').addEventListener('click', function (e) {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const idx = Number(btn.dataset.idx);
+            const action = btn.dataset.action;
+            const bookings = getBookingsFromStorage();
+            if (action === 'view') {
+                showDetail(bookings[idx]);
+            } else if (action === 'delete') {
+                if (!confirm('Delete this booking?')) return;
+                bookings.splice(idx, 1);
+                saveBookingsToStorage(bookings);
+                renderBookings();
+            }
+        });
+
+        function showDetail(booking) {
+            const panel = document.getElementById('detailsPanel');
+            const content = document.getElementById('detailContent');
+            document.getElementById('detailTitle').textContent = `Booking — ${booking.package}`;
+            content.innerHTML = `
+        <p><strong>Name:</strong> ${escapeHtml(booking.name)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(booking.email)}</p>
+        <p><strong>Phone:</strong> ${escapeHtml(booking.phone)}</p>
+        <p><strong>Travellers:</strong> ${escapeHtml(booking.travellers)}</p>
+        <p><strong>Destination:</strong> ${escapeHtml(booking.destination)}</p>
+        <p><strong>Start:</strong> ${escapeHtml(booking.start)}</p>
+        <p><strong>End:</strong> ${escapeHtml(booking.end)}</p>
+        <p><strong>Requests:</strong> ${escapeHtml(booking.requests || '—')}</p>
+        <p class="muted">Saved: ${new Date(booking.createdAt).toLocaleString()}</p>
+      `;
+            panel.style.display = '';
+            panel.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        document.getElementById('closeDetail').addEventListener('click', function () {
+            document.getElementById('detailsPanel').style.display = 'none';
+        });
+
+        // Clear all bookings
+        document.getElementById('clearAllBtn').addEventListener('click', function () {
+            if (!confirm('Remove ALL bookings from this browser?')) return;
+            localStorage.removeItem(STORAGE_KEY);
+            renderBookings();
+        });
+
+        // Export CSV
+        document.getElementById('exportBtn').addEventListener('click', function () {
+            const bookings = getBookingsFromStorage();
+            if (!bookings.length) { alert('No bookings to export.'); return; }
+            const csvRows = [];
+            const headers = ['id', 'name', 'email', 'phone', 'travellers', 'destination', 'package', 'start', 'end', 'requests', 'createdAt'];
+            csvRows.push(headers.join(','));
+            bookings.forEach(b => {
+                const row = headers.map(h => `"${String(b[h] || '').replace(/\"/g, '""')}"`).join(',');
+                csvRows.push(row);
+            });
+            const csv = csvRows.join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'wanderwave_bookings.csv';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        });
+
+        // initial render
+        renderBookings();
+        document.getElementById('year6').textContent = new Date().getFullYear();
+    </script>
+</body>
+
+</html>

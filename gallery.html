@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gallery — WanderWave</title>
+    <meta name="description" content="Gallery of destination images to inspire your next trip.">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="images/logo.png">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="index.html"><img src="images/logo.png" alt="Brand Logo" class="logo">WanderWave</a>
+            <nav class="main-nav">
+                <a href="index.html">Home</a>
+                <a href="packages.html">Packages</a>
+                <a class="active" href="gallery.html">Gallery</a>
+                <a href="booking.html">Book</a>
+                <a href="bookings.html">My Bookings</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container gallery-page">
+        <h1>Gallery</h1>
+        <p>A few snapshots from our trips — click to view the caption.</p>
+
+        <section class="gallery-grid" aria-label="Destination gallery">
+            <figure>
+                <img src="images/paris.jpeg" alt="Eiffel Tower at sunset" loading="lazy">
+                <figcaption>Paris — the city of lights and romance.</figcaption>
+            </figure>
+
+            <figure>
+                <img src="images/maldives.jpeg" alt="Turquoise water and overwater villas" loading="lazy">
+                <figcaption>Maldives — crystal clear waters and calm beaches.</figcaption>
+            </figure>
+
+            <figure>
+                <img src="images/rajasthan.jpeg" alt="Lively markets and forts in Rajasthan" loading="lazy">
+                <figcaption>Rajasthan — vibrant culture and historic forts.</figcaption>
+            </figure>
+
+            <figure>
+                <img src="images/everest.jpg" alt="Himalayan peaks near Everest" loading="lazy">
+                <figcaption>Nepal — mountain views and trekking adventures.</figcaption>
+            </figure>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>&copy; <span id="year4"></span> WanderWave Travel.</p>
+        </div>
+    </footer>
+
+    <script>document.getElementById('year4').textContent = new Date().getFullYear();</script>
+</body>
+
+</html>

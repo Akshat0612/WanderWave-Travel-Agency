@@ -1,0 +1,110 @@
+<!Doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WanderWave Travel — Explore. Dream. Discover.</title>
+  <meta name="description" content="WanderWave Travel offers curated tour packages, custom itineraries and easy online bookings to top destinations worldwide.">
+  <link rel="canonical" href="/index.html">
+  <link rel="stylesheet" href="css/styles.css">
+  <meta name="theme-color" content="#0b6b9a">
+  <link rel="icon" type="image/png" href="images/logo.png">
+  <!-- Basic Open Graph -->
+  <meta property="og:title" content="WanderWave Travel — Explore. Dream. Discover.">
+  <meta property="og:description" content="Curated tour packages and easy online booking to top destinations worldwide.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="images/banner.jpg">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html"><img src="images/logo.png" alt="Brand Logo" class="logo">WanderWave</a>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="packages.html">Packages</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="booking.html">Book</a>
+        <a href="bookings.html">My Bookings</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-label="Welcome banner">
+      <img src="images/banner.jpeg" alt="Scenic travel banner showing mountains and sea" class="hero-img">
+      <div class="hero-content container">
+        <h1>Travel Smarter with WanderWave</h1>
+        <p>Handpicked itineraries, flexible dates and local guides — discover your next unforgettable trip.</p>
+        <p><a class="btn" href="packages.html">Browse Packages</a> <a class="btn btn-alt" href="booking.html">Book Now</a></p>
+      </div>
+    </section>
+
+    <section class="intro container">
+      <h2>Why travel with us?</h2>
+      <ul class="features">
+        <li><strong>Curated Trips</strong><span> — Expertly designed itineraries for every traveler.</span></li>
+        <li><strong>Transparent Pricing</strong><span> — No hidden fees; clear inclusions and exclusions.</span></li>
+        <li><strong>24/7 Support</strong><span> — Local partners for peace of mind on the road.</span></li>
+      </ul>
+    </section>
+
+    <section class="featured container" aria-labelledby="featured-heading">
+      <h2 id="featured-heading">Featured Packages</h2>
+      <div class="cards">
+        <article class="card">
+          <img src="images/paris.jpeg" alt="Eiffel Tower in Paris" loading="lazy">
+          <h3>Romantic Paris</h3>
+          <p>5 days • From Rs 120,000/-</p>
+          <p><a href="packages.html#pkg-paris" class="card-link">View package</a></p>
+        </article>
+
+        <article class="card">
+          <img src="images/rajasthan.jpeg" alt="Historic forts in Rajasthan" loading="lazy">
+          <h3>Rajasthan Splendor</h3>
+          <p>7 days • From Rs 50,000/-</p>
+          <p><a href="packages.html#pkg-rajasthan" class="card-link">View package</a></p>
+        </article>
+
+        <article class="card">
+          <img src="images/maldives.jpeg" alt="Overwater bungalows in Maldives" loading="lazy">
+          <h3>Maldives Escape</h3>
+          <p>4 days • From Rs 180,000/-</p>
+          <p><a href="packages.html#pkg-maldives" class="card-link">View package</a></p>
+        </article>
+
+        <article class="card">
+          <img src="images/everest.jpg" alt="Mesmerising Peaks of Himalayas in Nepal" loading="lazy">
+          <h3>Adventure Nepal</h3>
+          <p>6 days • From Rs 150,000/-</p>
+          <p><a href="packages.html#pkg-nepal" class="card-link">View package</a></p>
+        </article>
+      </div>
+    </section>
+
+    <section class="tips container" aria-labelledby="tips-heading">
+      <h2 id="tips-heading">Travel Tips & Must-Visit</h2>
+      <ol>
+        <li>Carry copies of important documents and store them separately.</li>
+        <li>Check visa requirements and local laws before you go.</li>
+        <li>Try local food and join a short walking tour to learn about the culture.</li>
+        <li>Book early for peak-season savings.</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; <span id="year"></span> WanderWave Travel. All rights reserved.</p>
+      <nav class="footer-nav">
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    // small script for footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

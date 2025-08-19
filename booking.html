@@ -1,0 +1,266 @@
+<!-- File: booking.html -->
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Book Your Trip — WanderWave</title>
+    <meta name="description"
+        content="Book your chosen tour package. Fill in travel dates, number of travellers and contact details.">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="images/logo.png">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="index.html"><img src="images/logo.png" alt="Brand Logo" class="logo">WanderWave</a>
+            <nav class="main-nav">
+                <a href="index.html">Home</a>
+                <a href="packages.html">Packages</a>
+                <a href="gallery.html">Gallery</a>
+                <a class="active" href="booking.html">Book</a>
+                <a href="bookings.html">My Bookings</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Booking Form</h1>
+        <p>Fill out the form below — we'll contact you to confirm the reservation.</p>
+
+        <form id="booking-form" class="booking-form" action="#" method="get" onsubmit="return handleBooking(event)">
+            <fieldset>
+                <legend>Traveler details</legend>
+
+                <label for="name">Full name</label>
+                <input id="name" name="name" type="text" required placeholder="John Doe">
+
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" required placeholder="your@email.com">
+
+                <label for="phone">Phone</label>
+                <input id="phone" name="phone" type="tel" required placeholder="+91 98765 43210">
+
+                <label for="travellers">Number of travellers</label>
+                <input id="travellers" name="travellers" type="number" min="1" max="20" value="2">
+            </fieldset>
+
+            <fieldset>
+                <legend>Trip details</legend>
+
+                <label for="destination">Destination</label>
+                <select id="destination" name="destination">
+                    <option value="Paris">Paris, France</option>
+                    <option value="Rajasthan">Rajasthan, India</option>
+                    <option value="Maldives">Maldives</option>
+                    <option value="Nepal">Nepal</option>
+                </select>
+
+                <label for="package">Package</label>
+                <select id="package" name="package">
+                    <option value="Romantic Paris">Romantic Paris</option>
+                    <option value="Rajasthan Splendor">Rajasthan Splendor</option>
+                    <option value="Maldives Escape">Maldives Escape</option>
+                    <option value="Adventure Nepal">Adventure Nepal</option>
+                </select>
+
+                <div class="date-row">
+                    <div>
+                        <label for="start">Start date</label>
+                        <input id="start" name="start" type="date" required min="">
+                    </div>
+
+                    <div>
+                        <label for="end">End date</label>
+                        <input id="end" name="end" type="date" required>
+                    </div>
+                </div>
+
+                <label for="requests">Special requests</label>
+                <textarea id="requests" name="requests" rows="4"
+                    placeholder="Dietary needs, accessibility requests, etc."></textarea>
+            </fieldset>
+
+            <p><button type="submit" class="btn">Send Booking Request</button></p>
+        </form>
+
+        <div id="booking-confirm" class="confirm" aria-live="polite" hidden></div>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>&copy; <span id="year3"></span> WanderWave Travel.</p>
+        </div>
+    </footer>
+
+    <!-- include this in booking.html, replacing previous script block -->
+    <script>
+        // ----- helper localStorage functions -----
+        const STORAGE_KEY = 'wanderwave_bookings';
+
+        function getBookingsFromStorage() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                return raw ? JSON.parse(raw) : [];
+            } catch (e) {
+                console.error('Error reading bookings from storage', e);
+                return [];
+            }
+        }
+
+        function saveBookingsToStorage(bookings) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
+            } catch (e) {
+                console.error('Error saving bookings to storage', e);
+            }
+        }
+
+        function addBookingToStorage(booking) {
+            const bookings = getBookingsFromStorage();
+            bookings.unshift(booking); // add newest to front
+            saveBookingsToStorage(bookings);
+        }
+
+        // ----- Prefill package from URL (unchanged) -----
+        (function prefillFromQuery() {
+            const params = new URLSearchParams(window.location.search);
+            const pkg = params.get('pkg');
+            if (pkg) {
+                const pkgDecoded = decodeURIComponent(pkg);
+                const packageSelect = document.getElementById('package');
+                if (packageSelect) {
+                    for (const opt of packageSelect.options) {
+                        if (opt.value === pkgDecoded || (opt.text && opt.text.trim() === pkgDecoded.trim())) {
+                            opt.selected = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        })();
+
+        function computeDatesDisplay(startVal, endVal) {
+            const s = startVal ? startVal.toString().trim() : '';
+            const e = endVal ? endVal.toString().trim() : '';
+
+            if (s && e) return `${s} → ${e}`;
+            if (s && !e) return `${s} → Not specified`;
+            if (!s && e) return `Not specified → ${e}`;
+            return 'Not specified';
+        }
+
+        // ----- Form handling -----
+        function handleBooking(e) {
+            e.preventDefault();
+            const form = document.getElementById('booking-form');
+            const data = new FormData(form);
+
+            const name = (data.get('name') || '').trim();
+            const email = (data.get('email') || '').trim();
+            const phone = (data.get('phone') || '').trim();
+            const travellers = (data.get('travellers') || '').trim();
+
+            const start = (data.get('start') || '').trim();
+            const end = (data.get('end') || '').trim();
+
+            let pkgVal = (data.get('package') || '').trim();
+            const destination = (data.get('destination') || '').trim();
+
+            if (!name || !email || !phone || !destination) {
+                alert("Please fill in all required fields (Name, Email, Phone and Destination/Package).");
+                return false;
+            }
+
+            if (start && end) {
+                const startDt = new Date(start);
+                const endDt = new Date(end);
+                if (endDt < startDt) {
+                    alert('End date must be after start date.');
+                    return false;
+                }
+            }
+
+            const booking = {
+                id: 'bk_' + Date.now(),
+                name,
+                email,
+                phone,
+                travellers,
+                destination,
+                package: pkgVal,
+                start,
+                end,
+                datesDisplay: computeDatesDisplay(start, end),
+                requests: (data.get('requests') || '').trim(),
+                createdAt: new Date().toISOString()
+            };
+
+            addBookingToStorage(booking);
+
+            const confirmDiv = document.getElementById('booking-confirm');
+            if (confirmDiv) {
+                confirmDiv.hidden = false;
+                confirmDiv.innerHTML = `<strong>Thanks ${escapeHtml(booking.name)}!</strong>
+    We saved your request for <em>${escapeHtml(booking.package || booking.destination || 'Selected package')}</em>.
+    You can view your bookings here -> <a href="bookings.html">My Bookings</a>.`;
+            } else {
+                alert(`Thanks ${booking.name || ''}! Booking saved.`);
+            }
+
+            form.reset();
+            return false;
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>\"']/g, function (m) {
+                return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": "&#39;" })[m];
+            });
+        }
+
+        const bookingFormEl = document.getElementById('booking-form');
+        if (bookingFormEl) {
+            bookingFormEl.addEventListener('submit', handleBooking);
+        } else {
+            console.warn('booking-form element not found; handleBooking not attached.');
+        }
+
+        if (document.getElementById('year3')) {
+            document.getElementById('year3').textContent = new Date().getFullYear();
+        }
+
+        // 🔽 NEW FEATURE: Auto-select package based on destination
+        const destinationToPackage = {
+            "Paris": "Romantic Paris",
+            "Rajasthan": "Rajasthan Splendor",
+            "Maldives": "Maldives Escape",
+            "Nepal": "Adventure Nepal"
+        };
+
+        const destinationSelect = document.getElementById('destination');
+        const packageSelect = document.getElementById('package');
+
+        if (destinationSelect && packageSelect) {
+            destinationSelect.addEventListener('change', function () {
+                const dest = this.value;
+                if (destinationToPackage[dest]) {
+                    packageSelect.value = destinationToPackage[dest];
+                }
+            });
+        }
+
+        const startInput = document.getElementById('start');
+        if (startInput) {
+            const today = new Date().toISOString().split('T')[0]; // yyyy-mm-dd
+            startInput.setAttribute('min', today);
+        }
+    </script>
+
+
+</body>
+
+</html>
