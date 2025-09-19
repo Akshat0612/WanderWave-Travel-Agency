@@ -335,3 +335,51 @@ a:focus {
     outline: 2px dashed var(--accent);
     outline-offset: 2px
 }
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 100;
+    padding-top: 60px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+.modal-caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+}
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+}
+.modal-close:hover,
+.modal-close:focus {
+    color: #bbb;
+}
+
+/* ADD THIS to the end of your css/styles.css file */
+.packages-table tbody td:nth-child(5) { /* Targets the 5th column (Peak-season) */
+    text-align: center;
+    vertical-align: middle; /* Ensures vertical alignment too */
+}

@@ -18,7 +18,7 @@
                 <a href="index.html">Home</a>
                 <a href="packages.html">Packages</a>
                 <a class="active" href="gallery.html">Gallery</a>
-                <a href="booking.html">Book</a>
+                <a href="booking.html">Booking</a>
                 <a href="bookings.html">My Bookings</a>
                 <a href="contact.html">Contact</a>
             </nav>
@@ -31,34 +31,47 @@
 
         <section class="gallery-grid" aria-label="Destination gallery">
             <figure>
-                <img src="images/paris.jpeg" alt="Eiffel Tower at sunset" loading="lazy">
+                <img src="images/paris.jpeg" alt="Eiffel Tower at sunset" loading="lazy" data-large="images/paris.jpeg">
                 <figcaption>Paris — the city of lights and romance.</figcaption>
             </figure>
 
             <figure>
-                <img src="images/maldives.jpeg" alt="Turquoise water and overwater villas" loading="lazy">
+                <img src="images/maldives.jpeg" alt="Turquoise water and overwater villas" loading="lazy"
+                    data-large="images/maldives.jpeg">
                 <figcaption>Maldives — crystal clear waters and calm beaches.</figcaption>
             </figure>
 
             <figure>
-                <img src="images/rajasthan.jpeg" alt="Lively markets and forts in Rajasthan" loading="lazy">
+                <img src="images/rajasthan.jpeg" alt="Lively markets and forts in Rajasthan" loading="lazy"
+                    data-large="images/rajasthan.jpeg">
                 <figcaption>Rajasthan — vibrant culture and historic forts.</figcaption>
             </figure>
 
             <figure>
-                <img src="images/everest.jpg" alt="Himalayan peaks near Everest" loading="lazy">
+                <img src="images/everest.jpg" alt="Himalayan peaks near Everest" loading="lazy"
+                    data-large="images/everest.jpg">
                 <figcaption>Nepal — mountain views and trekking adventures.</figcaption>
             </figure>
         </section>
     </main>
 
+    <div id="imageModal" class="modal">
+        <span class="modal-close">&times;</span>
+        <img class="modal-content" id="modalImage">
+        <div class="modal-caption" id="modalCaption"></div>
+    </div>
+
     <footer class="site-footer">
         <div class="container footer-inner">
-            <p>&copy; <span id="year4"></span> WanderWave Travel.</p>
+            <p>&copy; <span id="year"></span> WanderWave Travel.</p>
         </div>
     </footer>
 
-    <script>document.getElementById('year4').textContent = new Date().getFullYear();</script>
+    <script src="js/app.js"></script>
+    <script>
+    // small script for footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 
 </html>

@@ -5,8 +5,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Packages — WanderWave Travel</title>
-    <meta name="description"
-        content="View our tour packages: price, duration, destination and highlights. Book online easily.">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" type="image/png" href="images/logo.png">
 </head>
@@ -19,17 +17,15 @@
                 <a href="index.html">Home</a>
                 <a class="active" href="packages.html">Packages</a>
                 <a href="gallery.html">Gallery</a>
-                <a href="booking.html">Book</a>
+                <a href="booking.html">Booking</a>
                 <a href="bookings.html">My Bookings</a>
                 <a href="contact.html">Contact</a>
             </nav>
         </div>
     </header>
-
     <main class="container">
         <h1>Tour Packages</h1>
         <p>Choose from our popular packages below — all packages can be booked online or customised on request.</p>
-
         <table class="packages-table" aria-describedby="packages-desc">
             <caption id="packages-desc">List of available tour packages with price and duration</caption>
             <thead>
@@ -38,43 +34,45 @@
                     <th>Destination</th>
                     <th>Duration</th>
                     <th>Price (pp)</th>
+                    <th>Peak-season</th>
                     <th>Highlights</th>
                     <th>Book</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="packages-body">
                 <tr id="pkg-paris">
                     <td>Romantic Paris</td>
                     <td>Paris, France</td>
                     <td>5 days / 4 nights</td>
                     <td>Rs 120,000/-</td>
+                    <td></td>
                     <td>Eiffel, Louvre, Seine dinner</td>
                     <td><a class="btn-small" href="booking.html?pkg=Romantic%20Paris">Book</a></td>
                 </tr>
-
                 <tr id="pkg-rajasthan">
                     <td>Rajasthan Splendor</td>
                     <td>Rajasthan, India</td>
                     <td>7 days / 6 nights</td>
                     <td>Rs 50,000/-</td>
+                    <td></td>
                     <td>Forts, Palaces, Camel safari</td>
                     <td><a class="btn-small" href="booking.html?pkg=Rajasthan%20Splendor">Book</a></td>
                 </tr>
-
                 <tr id="pkg-maldives">
                     <td>Maldives Escape</td>
                     <td>Maldives</td>
                     <td>4 days / 3 nights</td>
                     <td>Rs 180,000/-</td>
+                    <td></td>
                     <td>Resort stay, Snorkeling</td>
                     <td><a class="btn-small" href="booking.html?pkg=Maldives%20Escape">Book</a></td>
                 </tr>
-
                 <tr id="pkg-nepal">
                     <td>Adventure Nepal</td>
                     <td>Nepal</td>
                     <td>6 days / 5 nights</td>
                     <td>Rs 150,000/-</td>
+                    <td></td>
                     <td>Hiking, Kathmandu tour</td>
                     <td><a class="btn-small" href="booking.html?pkg=Adventure%20Nepal">Book</a></td>
                 </tr>
@@ -84,19 +82,26 @@
         <section class="notes">
             <h2>Notes</h2>
             <ul>
-                <li>Prices per person, based on twin sharing. Single supplements may apply.</li>
-                <li>Flights and Lodging included.</li>
+                <li>The Price shown in the table is the <b>**Base Price**</b> per person.</li>
+                <li>Your <b>**Final Price**</b> will be calculated on the Booking page after you select your dates.</li>
+                <li>The Final price may include <b>Surcharges (e.g., for peak-season or weekend travel)</b> and will
+                    subtract any valid <b>discounts (e.g., promo codes, group booking offers).</b></li>
+                <li>Flights and standard lodging are included in all packages.</li>
             </ul>
         </section>
-    </main>
 
+    </main>
     <footer class="site-footer">
         <div class="container footer-inner">
-            <p>&copy; <span id="year2"></span> WanderWave Travel.</p>
+            <p>&copy; <span id="year"></span> WanderWave Travel.</p>
         </div>
     </footer>
 
-    <script>document.getElementById('year2').textContent = new Date().getFullYear();</script>
+    <script src="js/app.js"></script>
+    <script>
+        // small script for footer year
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
 </body>
 
 </html>
